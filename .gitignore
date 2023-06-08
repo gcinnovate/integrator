@@ -1,0 +1,38 @@
+# Fyne specific ignore rules
+
+# Fyne app build output
+integrator
+Integrator.apk
+Integrator.app
+
+# Fyne app cache
+.fyne/
+
+# Fyne cross-compiled binaries
+dist/
+
+# Ignore any IDE-specific files or directories
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore system-specific files
+.DS_Store
+Thumbs.db
+
+# GoLand IDE files
+.idea/
+*.iml
+
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+
+# Compiled Binary files
+*.exe
+*.out
+
+# Dependency directories
+vendor/

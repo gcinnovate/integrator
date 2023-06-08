@@ -1,0 +1,12 @@
+[Details]
+  Icon = "icons/fyne.png"
+  Name = "Integrator"
+  ID = "com.gcinnovate.integrator"
+  Version = "1.0.0"
+  Build = 9
+
+[Development]
+  HelperText = "This binary was build with debug symbol"
+
+[Release]
+  HelperText = "This binary was build without debug symbol"
