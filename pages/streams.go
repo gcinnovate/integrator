@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"fyne.io/fyne/v2/widget"
+	"fyne.io/fyne/v2/data/binding"
 	"os"
 	"time"
 )
@@ -157,7 +157,7 @@ func (s Stream) Watch() <-chan Entry {
 
 // Start starts streaming JSON file line by line. If an error occurs, the channel
 // will be closed.
-func (s Stream) Start(path string, ftype string, progressBar *widget.ProgressBar) {
+func (s Stream) Start(path string, ftype string, progressFloat binding.ExternalFloat) {
 	// Stop streaming channel as soon as nothing left to read in the file.
 	defer close(s.stream)
 
@@ -218,10 +218,12 @@ func (s Stream) Start(path string, ftype string, progressBar *widget.ProgressBar
 		filePos, _ := file.Seek(0, 1) // Get current file position
 		progress := float64(filePos) / float64(fileSize) * 100
 		fmt.Printf("The current Progress is: %v%%\n", progress)
-		progressBar.SetValue(progress)
+		// progressBar.SetValue(progress)
+		_ = progressFloat.Set(progress)
 		if int(progress) == 100 {
 			time.Sleep(10 * time.Millisecond)
-			progressBar.SetValue(0)
+			// progressBar.SetValue(0)
+			_ = progressFloat.Set(progress)
 
 		}
 	}
@@ -271,7 +273,7 @@ func (s EnrollmentStream) Watch() <-chan EnrollmentEntry {
 
 // Start starts streaming JSON file line by line. If an error occurs, the channel
 // will be closed.
-func (s EnrollmentStream) Start(path string, ftype string, progressBar *widget.ProgressBar) {
+func (s EnrollmentStream) Start(path string, ftype string, progressFloat binding.ExternalFloat) {
 	// Stop streaming channel as soon as nothing left to read in the file.
 	defer close(s.stream)
 
@@ -332,10 +334,10 @@ func (s EnrollmentStream) Start(path string, ftype string, progressBar *widget.P
 		filePos, _ := file.Seek(0, 1) // Get current file position
 		progress := float64(filePos) / float64(fileSize) * 100
 		fmt.Printf("The current Progress is: %v%%\n", progress)
-		progressBar.SetValue(progress)
+		_ = progressFloat.Set(progress)
 		if int(progress) == 100 {
 			time.Sleep(10 * time.Millisecond)
-			progressBar.SetValue(0)
+			_ = progressFloat.Set(0)
 
 		}
 	}
@@ -363,7 +365,7 @@ func (s EventStream) Watch() <-chan EventEntry {
 
 // Start starts streaming JSON file line by line. If an error occurs, the channel
 // will be closed.
-func (s EventStream) Start(path string, ftype string, progressBar *widget.ProgressBar) {
+func (s EventStream) Start(path string, ftype string, progressFloat binding.ExternalFloat) {
 	// Stop streaming channel as soon as nothing left to read in the file.
 	defer close(s.stream)
 
@@ -424,10 +426,10 @@ func (s EventStream) Start(path string, ftype string, progressBar *widget.Progre
 		filePos, _ := file.Seek(0, 1) // Get current file position
 		progress := float64(filePos) / float64(fileSize) * 100
 		fmt.Printf("The current Progress is: %v%%\n", progress)
-		progressBar.SetValue(progress)
+		_ = progressFloat.Set(progress)
 		if int(progress) == 100 {
 			time.Sleep(10 * time.Millisecond)
-			progressBar.SetValue(0)
+			_ = progressFloat.Set(0)
 
 		}
 	}

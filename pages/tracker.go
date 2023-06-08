@@ -31,8 +31,9 @@ var (
 
 func makeTrackerTab(w fyne.Window) fyne.CanvasObject {
 	f := 0.0
-	data := binding.BindFloat(&f)
-	progressBar := widget.NewProgressBarWithData(data)
+	progressFloat := binding.BindFloat(&f)
+
+	progressBar := widget.NewProgressBarWithData(progressFloat)
 	progressBar.Min = 0
 	progressBar.Max = 100
 	// item := container.NewVBox(bar)
@@ -151,7 +152,7 @@ func makeTrackerTab(w fyne.Window) fyne.CanvasObject {
 								//if err != nil {
 								//	log.Println("Error queuing chunk: ", err)
 								//}
-								postTrackerPayload(finalURL, payLoad, username.Text, password.Text)
+								_ = postTrackerPayload(finalURL, payLoad, username.Text, password.Text)
 								time.Sleep(500 * time.Millisecond)
 								payLoad = nil
 
@@ -161,10 +162,10 @@ func makeTrackerTab(w fyne.Window) fyne.CanvasObject {
 					}
 					if len(payLoad) > 0 {
 						// Meaning batch size might have been bigger than available entities
-						postTrackerPayload(finalURL, payLoad, username.Text, password.Text)
+						_ = postTrackerPayload(finalURL, payLoad, username.Text, password.Text)
 					}
 				}()
-				stream.Start(filePath, m[categorySelect.Selected], progressBar)
+				stream.Start(filePath, m[categorySelect.Selected], progressFloat)
 
 				// Wait for the streaming task to complete
 				wg.Wait()
@@ -209,10 +210,10 @@ func makeTrackerTab(w fyne.Window) fyne.CanvasObject {
 					}
 					if len(payLoad) > 0 {
 						// Meaning batch size might have been bigger than available entities
-						postTrackerPayload(finalURL, payLoad, username.Text, password.Text)
+						_ = postTrackerPayload(finalURL, payLoad, username.Text, password.Text)
 					}
 				}()
-				stream.Start(filePath, m[categorySelect.Selected], progressBar)
+				stream.Start(filePath, m[categorySelect.Selected], progressFloat)
 
 				// Wait for the streaming task to complete
 				wg.Wait()
@@ -247,7 +248,7 @@ func makeTrackerTab(w fyne.Window) fyne.CanvasObject {
 							if err == nil {
 								log.Println(string(j))
 
-								postTrackerPayload(finalURL, payLoad, username.Text, password.Text)
+								_ = postTrackerPayload(finalURL, payLoad, username.Text, password.Text)
 								time.Sleep(500 * time.Millisecond)
 								payLoad = nil
 
@@ -257,10 +258,10 @@ func makeTrackerTab(w fyne.Window) fyne.CanvasObject {
 					}
 					if len(payLoad) > 0 {
 						// Meaning batch size might have been bigger than available entities
-						postTrackerPayload(finalURL, payLoad, username.Text, password.Text)
+						_ = postTrackerPayload(finalURL, payLoad, username.Text, password.Text)
 					}
 				}()
-				stream.Start(filePath, m[categorySelect.Selected], progressBar)
+				stream.Start(filePath, m[categorySelect.Selected], progressFloat)
 
 				go func() {
 					wg.Wait()
