@@ -21,6 +21,9 @@ func main() {
 	w := a.NewWindow("Integrator")
 	topWindow = w
 
+	appState := pages.NewAppState()
+	pages.UpdateTrackerConf(appState.TrackerConf)
+
 	w.SetMainMenu(makeMenu(a, w))
 	w.SetMaster()
 

@@ -32,6 +32,11 @@ var (
 func makeTrackerTab(w fyne.Window) fyne.CanvasObject {
 	f := 0.0
 	progressFloat := binding.BindFloat(&f)
+	state := GetAppState()
+	t := state.TrackerConf
+	// Create data bindings for the form fields
+	usernameBinding := binding.BindString(&state.TrackerConf.Username)
+	queueServerBinding := binding.BindString(&state.TrackerConf.URL)
 
 	progressBar := widget.NewProgressBarWithData(progressFloat)
 	progressBar.Min = 0
@@ -44,23 +49,49 @@ func makeTrackerTab(w fyne.Window) fyne.CanvasObject {
 		"Tracked Entities + Enrollments + Events",
 		"Aggregate"},
 		func(s string) {
+			t.ObjectType = s
+			UpdateTrackerConf(t)
 		})
 	categorySelect.PlaceHolder = "Select Tracker Object"
+	categorySelect.SetSelected(state.TrackerConf.ObjectType)
 
 	numberPerBatch := newNumEntry()
 	numberPerBatch.SetPlaceHolder("Number of items per batch")
+	numberPerBatch.OnChanged = func(s string) {
+		i, err := strconv.Atoi(s)
+		if err == nil {
+			t.BatchSize = i
+			UpdateTrackerConf(t)
 
-	queueServer := widget.NewEntry()
+		}
+	}
+	numberPerBatch.SetText(strconv.Itoa(state.TrackerConf.BatchSize))
+
+	queueServer := widget.NewEntryWithData(queueServerBinding)
 	queueServer.SetPlaceHolder("messaging server queue endpoint")
-	queueServer.SetText("http://localhost.com:9191/queue?source=localhost&destination=eidsr_teis")
+	// queueServer.SetText(state.TrackerConf.URL)
 	queueServer.Validator = validation.NewRegexp(
 		// `[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)`,
 		`http(s)?:\/\/(www\.)?[a-zA-Z0-9\-@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)`,
 		"not a valid url")
+	queueServerBinding.AddListener(binding.NewDataListener(func() {
+		n, err := queueServerBinding.Get()
+		if err == nil {
+			state.TrackerConf.URL = n
+			UpdateTrackerConf(state.TrackerConf)
+		}
+	}))
 
-	username := widget.NewEntry()
+	username := widget.NewEntryWithData(usernameBinding)
 	username.SetPlaceHolder("Username")
 	username.Validator = validation.NewRegexp(`\w`, "missing username")
+	usernameBinding.AddListener(binding.NewDataListener(func() {
+		n, err := usernameBinding.Get()
+		if err == nil {
+			state.TrackerConf.Username = n
+			UpdateTrackerConf(state.TrackerConf)
+		}
+	}))
 
 	password := widget.NewPasswordEntry()
 	password.SetPlaceHolder("Password")
@@ -287,7 +318,12 @@ func makeTrackerTab(w fyne.Window) fyne.CanvasObject {
 	form.Append("Selected File", fileLabel)
 	//form.Append("Progress", bar)
 	// return container.NewBorder(item, nil, nil, nil, form)
-	statsCol := container.NewVBox(progressBar)
+	rich := widget.NewRichTextFromMarkdown(`
+# Submission Status
+
+
+`)
+	statsCol := container.NewVBox(progressBar, rich)
 	return container.NewGridWithColumns(2, form, statsCol)
 	// return form
 }
