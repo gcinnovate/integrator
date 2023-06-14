@@ -56,11 +56,12 @@ func main() {
 		w.SetContent(makeNav(setPage, false))
 	} else {
 		split := container.NewHSplit(makeNav(setPage, true), page)
-		split.Offset = 0.2
+		split.Offset = 0.12
 		w.SetContent(split)
 	}
 
-	w.Resize(fyne.NewSize(800, 500))
+	w.Resize(fyne.NewSize(1200, 700))
+	w.CenterOnScreen()
 	w.ShowAndRun()
 }
 

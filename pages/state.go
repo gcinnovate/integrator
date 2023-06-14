@@ -1,12 +1,25 @@
 package pages
 
+type BatchDetails struct {
+	Objects   string
+	Batched   string
+	Success   string
+	Failed    string
+	StartTime string
+	EndTime   string
+}
+
 type TrackerConf struct {
-	URL        string
-	ObjectType string
-	BatchSize  int
-	Username   string
-	Password   string
-	JSONFile   string
+	URL         string
+	ObjectType  string
+	BatchSize   int
+	Destination string
+	AuthMethod  string
+	Username    string
+	Password    string
+	Token       string
+	JSONFile    string
+	Details     BatchDetails
 }
 
 type AppState struct {
@@ -19,12 +32,23 @@ var appState *AppState
 func NewAppState() *AppState {
 	appState = &AppState{
 		TrackerConf: TrackerConf{
-			URL:        "http://localhost.com:9191/queue?source=localhost&destination=eidsr_teis",
-			ObjectType: "trackedEntityInstance",
-			BatchSize:  15,
-			JSONFile:   "",
-			Username:   "",
-			Password:   "",
+			URL:         "http://localhost.com:9191/queue?source=localhost&destination=eidsr_teis",
+			ObjectType:  "Tracked Entities",
+			BatchSize:   15,
+			Destination: "Queuing Server",
+			JSONFile:    "",
+			AuthMethod:  "Basic Authentication",
+			Username:    "",
+			Password:    "",
+			Token:       "",
+			Details: BatchDetails{
+				"Total Objects: 0",
+				"Batches: 0",
+				"Successful Batches: 0",
+				"Failed Batches: 0",
+				"Start Time: ",
+				"End Time: ",
+			},
 		},
 	}
 	return appState

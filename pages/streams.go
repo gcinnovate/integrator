@@ -157,7 +157,8 @@ func (s Stream) Watch() <-chan Entry {
 
 // Start starts streaming JSON file line by line. If an error occurs, the channel
 // will be closed.
-func (s Stream) Start(path string, ftype string, progressFloat binding.ExternalFloat) {
+func (s Stream) Start(
+	path string, ftype string, progressFloat binding.ExternalFloat, endTimeStr binding.ExternalString) {
 	// Stop streaming channel as soon as nothing left to read in the file.
 	defer close(s.stream)
 
@@ -221,6 +222,8 @@ func (s Stream) Start(path string, ftype string, progressFloat binding.ExternalF
 		// progressBar.SetValue(progress)
 		_ = progressFloat.Set(progress)
 		if int(progress) == 100 {
+			now := time.Now().Format("2006-01-02 15:04:05")
+			_ = endTimeStr.Set(fmt.Sprintf("End Time: %s", now))
 			time.Sleep(10 * time.Millisecond)
 			// progressBar.SetValue(0)
 			_ = progressFloat.Set(progress)
@@ -273,7 +276,8 @@ func (s EnrollmentStream) Watch() <-chan EnrollmentEntry {
 
 // Start starts streaming JSON file line by line. If an error occurs, the channel
 // will be closed.
-func (s EnrollmentStream) Start(path string, ftype string, progressFloat binding.ExternalFloat) {
+func (s EnrollmentStream) Start(
+	path string, ftype string, progressFloat binding.ExternalFloat, endTimeStr binding.ExternalString) {
 	// Stop streaming channel as soon as nothing left to read in the file.
 	defer close(s.stream)
 
@@ -336,6 +340,8 @@ func (s EnrollmentStream) Start(path string, ftype string, progressFloat binding
 		fmt.Printf("The current Progress is: %v%%\n", progress)
 		_ = progressFloat.Set(progress)
 		if int(progress) == 100 {
+			now := time.Now().Format("2006-01-02 15:04:05")
+			_ = endTimeStr.Set(fmt.Sprintf("End Time: %s", now))
 			time.Sleep(10 * time.Millisecond)
 			_ = progressFloat.Set(0)
 
@@ -365,7 +371,8 @@ func (s EventStream) Watch() <-chan EventEntry {
 
 // Start starts streaming JSON file line by line. If an error occurs, the channel
 // will be closed.
-func (s EventStream) Start(path string, ftype string, progressFloat binding.ExternalFloat) {
+func (s EventStream) Start(
+	path string, ftype string, progressFloat binding.ExternalFloat, endTimeStr binding.ExternalString) {
 	// Stop streaming channel as soon as nothing left to read in the file.
 	defer close(s.stream)
 
@@ -428,7 +435,9 @@ func (s EventStream) Start(path string, ftype string, progressFloat binding.Exte
 		fmt.Printf("The current Progress is: %v%%\n", progress)
 		_ = progressFloat.Set(progress)
 		if int(progress) == 100 {
-			time.Sleep(10 * time.Millisecond)
+			now := time.Now().Format("2006-01-02 15:04:05")
+			_ = endTimeStr.Set(fmt.Sprintf("End Time: %s", now))
+			time.Sleep(1000 * time.Millisecond)
 			_ = progressFloat.Set(0)
 
 		}
