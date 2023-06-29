@@ -6,8 +6,33 @@ import (
 	"fmt"
 	"fyne.io/fyne/v2/data/binding"
 	"os"
+	"strconv"
 	"time"
 )
+
+// FlexString is an int that can be unmarshalled from a JSON field
+// that has either a number or a string value.
+// E.g. if the json field contains an string "42", the
+// FlexInt value will be "42".
+type FlexString string
+
+func (fs *FlexString) UnmarshalJSON(data []byte) error {
+	var rawValue interface{}
+	if err := json.Unmarshal(data, &rawValue); err != nil {
+		return err
+	}
+
+	switch value := rawValue.(type) {
+	case string:
+		*fs = FlexString(value)
+	case float64:
+		*fs = FlexString(strconv.FormatFloat(value, 'f', -1, 64))
+	default:
+		return fmt.Errorf("unsupported value type: %T", value)
+	}
+
+	return nil
+}
 
 // TeisPayload to submit to DHIS2
 type TeisPayload struct {
@@ -51,14 +76,26 @@ func (d *Date) UnmarshalJSON(b []byte) (err error) {
 
 // DataValue struct
 type DataValue struct {
-	DataElement string `json:"dataElement"`
-	Value       string `json:"value"`
+	DataElement           string `json:"dataElement"`
+	Value                 string `json:"value,omitempty"`
+	ProvidedElseWhere     bool   `json:"providedElseWhere,omitempty"`
+	Created               string `json:"created,omitempty"`
+	LastUpdated           string `json:"lastUpdated,omitempty"`
+	StoredBy              string `json:"storedBy,omitempty"`
+	CreatedByUserInfo     string `json:"createdByUserInfo,omitempty"`
+	LastUpdatedByUserInfo string `json:"lastUpdatedByUserInfo,omitempty"`
 }
 
 // Attribute struct
 type Attribute struct {
-	Attribute string      `json:"attribute"`
-	Value     interface{} `json:"value"`
+	Attribute   string     `json:"attribute"`
+	Code        string     `json:"code,omitempty"`
+	DisplayName string     `json:"displayName,omitempty"`
+	Created     string     `json:"created,omitempty"`
+	LastUpdated string     `json:"lastUpdated,omitempty"`
+	StoredBy    string     `json:"storedBy,omitempty"`
+	ValueType   string     `json:"valueType,omitempty"`
+	Value       FlexString `json:"value,omitempty"`
 }
 
 // TrackedEntityInstance struct
@@ -106,17 +143,17 @@ type Coordinate struct {
 
 // Event struct
 type Event struct {
-	Event                 string `json:"event,omitempty"`
-	OrgUnit               string `json:"orgUnit"`
-	Program               string `json:"program"`
-	TrackedEntityInstance string `json:"trackedEntityInstance"`
-	AttributeOptionCombo  string `json:"attributeOptionCombo,omitempty"`
-	EventDate             Date   `json:"eventDate"`
-	CompleteDate          Date   `json:"completeDate,omitempty"`
-	Status                string `json:"status"`
-	StoredBy              string `json:"storedBy,omitempty"`
-	ProgramStage          string `json:"programStage"`
-	Coordinate            `json:"-"`
+	Event                 string      `json:"event,omitempty"`
+	OrgUnit               string      `json:"orgUnit"`
+	Program               string      `json:"program"`
+	TrackedEntityInstance string      `json:"trackedEntityInstance"`
+	AttributeOptionCombo  string      `json:"attributeOptionCombo,omitempty"`
+	EventDate             Date        `json:"eventDate"`
+	CompleteDate          Date        `json:"completeDate,omitempty"`
+	Status                string      `json:"status"`
+	StoredBy              string      `json:"storedBy,omitempty"`
+	ProgramStage          string      `json:"programStage"`
+	Coordinate            `json:"-"`  // - in the tag ignores this value in the JSON
 	DataValues            []DataValue `json:"dataValues"`
 }
 

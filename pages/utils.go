@@ -6,10 +6,47 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"fyne.io/fyne/v2"
 	"log"
 	"net/http"
 	"net/url"
+	"reflect"
 )
+
+func SaveStructPreferences(preferences fyne.Preferences, prefs interface{}) {
+	prefsValue := reflect.ValueOf(prefs)
+	if prefsValue.Kind() != reflect.Struct {
+		fmt.Println("Error: prefs interface is not a struct")
+		return
+	}
+
+	prefsType := prefsValue.Type()
+	numFields := prefsType.NumField()
+
+	for i := 0; i < numFields; i++ {
+		field := prefsType.Field(i)
+		fieldValue := prefsValue.Field(i)
+
+		// Only handle exported fields
+		if field.PkgPath != "" {
+			continue
+		}
+		// Get the field name and value
+		fieldName := field.Name
+		fieldValueInterface := fieldValue.Interface()
+		// Save the field value in preferences
+		switch field.Type.String() {
+		case "string":
+			preferences.SetString(fieldName, fieldValueInterface.(string))
+		case "int":
+			preferences.SetInt(fieldName, fieldValueInterface.(int))
+		default:
+			preferences.SetString(fieldName, fieldValueInterface.(string))
+
+		}
+	}
+
+}
 
 // addExtraParams adds some more params to URL
 func addExtraParams(baseURL string, extraParams url.Values) (string, error) {

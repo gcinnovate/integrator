@@ -32,7 +32,7 @@ var appState *AppState
 func NewAppState() *AppState {
 	appState = &AppState{
 		TrackerConf: TrackerConf{
-			URL:         "http://localhost.com:9191/queue?source=localhost&destination=eidsr_teis",
+			URL:         "http://localhost.com:9191/api/queue?source=localhost&destination=dhis2",
 			ObjectType:  "Tracked Entities",
 			BatchSize:   15,
 			Destination: "Queuing Server",

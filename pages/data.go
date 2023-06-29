@@ -25,6 +25,30 @@ var (
 			makeTrackerTab,
 			true,
 		},
+		"dispatcher2": {
+			"Dispatcher2-Go",
+			"Dispatcher2 Management Console",
+			adminScreen,
+			true,
+		},
+		"apps": {
+			"App Settings",
+			"Applications or Endpoints management module",
+			adminScreen,
+			true,
+		},
+		"requests": {
+			"Requests",
+			"Requests management module",
+			makeRequestsTable,
+			true,
+		},
+		"config": {
+			"Dispatcher2 Configuration",
+			"Configuration",
+			settings,
+			true,
+		},
 		"admin": {
 			"Admin",
 			"Administrative management console",
@@ -33,13 +57,13 @@ var (
 		},
 		"users": {
 			"Users",
-			"Users management module",
+			"User management",
 			adminScreen,
 			true,
 		},
 		"groups": {
-			"Groups",
-			"Groups management module",
+			"Group",
+			"Group management",
 			adminScreen,
 			true,
 		},
@@ -52,10 +76,10 @@ var (
 	}
 
 	PageIndex = map[string][]string{
-		"":              {"tracker", "admin"},
-		"admin":         {"users", "groups", "permissions"},
-		"sms":           {"rapidpro", "telegram"},
-		"mTracPro":      {"cases", "death", "apt", "tra"},
-		"familyconnect": {"register"},
+		"":            {"tracker", "dispatcher2", "admin"},
+		"admin":       {"users", "groups", "permissions"},
+		"dispatcher2": {"apps", "requests", "config"},
+		"sms":         {"rapidpro", "telegram"},
+		"mTracPro":    {"cases", "death", "apt", "tra"},
 	}
 )

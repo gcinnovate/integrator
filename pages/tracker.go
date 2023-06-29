@@ -25,7 +25,8 @@ var (
 		"Enrollments":      "enrollments",
 		"Events":           "events",
 		"Tracked Entities + Enrollments + Events": "events+enrollments",
-		"Aggregate": "dataValues",
+		"Tracker NESTED Payload":                  "nested",
+		"Aggregate":                               "dataValues",
 	}
 )
 
@@ -49,6 +50,7 @@ func makeTrackerTab(w fyne.Window) fyne.CanvasObject {
 		"Enrollments",
 		"Events",
 		"Tracked Entities + Enrollments + Events",
+		"Tracker NESTED Payload",
 		"Aggregate"},
 		func(s string) {
 			t.ObjectType = s
